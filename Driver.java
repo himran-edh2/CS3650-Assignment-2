@@ -22,6 +22,7 @@ public class Driver extends Application{
 	private TreeView<String> treeView;
 	private TextField textField;
 	private TextField textField2;
+	private long lastUpdateTime;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -36,6 +37,8 @@ public class Driver extends Application{
 		Button button5 = new Button("Show Group Total");
 		Button button6 = new Button("Show Messages Total");
 		Button button7 = new Button("Show Positive Percentage");
+		Button button8 = new Button("ID Verification");
+		Button button9 = new Button("Last Updated User");
 		gridPane.add(textField, 0, 0);
 		gridPane.add(textField2, 0, 1);
 		gridPane.add(button1, 1, 0);
@@ -46,6 +49,8 @@ public class Driver extends Application{
 		gridPane2.add(button6, 0, 1);
 		gridPane2.add(button5, 1, 0);
 		gridPane2.add(button7, 1, 1);
+		gridPane2.add(button8, 0, 2);
+		gridPane2.add(button9, 1, 2);
 		gridPane2.setHgap(20);
 		gridPane2.setVgap(20);
 		TreeItem<String> rootItem = new TreeItem<>("CS3650"/*, new ImageView(new Image(AdminControlPanel.class.getResourceAsStream("folder.png")))*/);
@@ -70,6 +75,7 @@ public class Driver extends Application{
 		button3.setOnAction(new newWindow());
 		button4.setOnAction(event -> {
 			Label label = new Label("Total Users: " + rootItem.getChildren());
+			label.setAlignment(Pos.CENTER);
 			Scene scene2 = new Scene(label, 500, 300);
 			Stage stage2 = new Stage();
 			stage2.setTitle("User Total");
@@ -78,6 +84,7 @@ public class Driver extends Application{
 		});
 		button5.setOnAction(event -> {
 			Label label = new Label("Group Total: " + branchItem.getChildren());
+			label.setAlignment(Pos.CENTER);
 			Scene scene2 = new Scene(label, 500, 300);
 			Stage stage2 = new Stage();
 			stage2.setTitle("Group Total");
@@ -86,6 +93,7 @@ public class Driver extends Application{
 		});
 		button6.setOnAction(event -> {
 			Label label = new Label("Message Total: 2");
+			label.setAlignment(Pos.CENTER);
 			Scene scene2 = new Scene(label, 500, 300);
 			Stage stage2 = new Stage();
 			stage2.setTitle("Message Total");
@@ -94,9 +102,35 @@ public class Driver extends Application{
 		});
 		button7.setOnAction(event -> {
 			Label label = new Label("Positivity Percentage: 50%");
+			label.setAlignment(Pos.CENTER);
 			Scene scene2 = new Scene(label, 500, 300);
 			Stage stage2 = new Stage();
 			stage2.setTitle("Positivty Percentage");
+			stage2.setScene(scene2);
+			stage2.show();
+		});
+		button8.setOnAction(event -> {
+			Label label = new Label();
+			label.setAlignment(Pos.CENTER);
+			if (branchItem != null && branchItem.getValue().equals(textField)) {
+				label.setText("Problem with IDs!!!");
+			}
+			else {
+				label.setText("All IDs OK!!!");
+			}
+			label.setAlignment(Pos.CENTER);
+			Scene scene2 = new Scene(label, 500, 300);
+			Stage stage2 = new Stage();
+			stage2.setTitle("ID Verification");
+			stage2.setScene(scene2);
+			stage2.show();
+		});
+		button9.setOnAction(event -> {
+			Label label = new Label("Latest Update: " + textField.getText() + " at " + lastUpdateTime + " ms");
+			label.setAlignment(Pos.CENTER);
+			Scene scene2 = new Scene(label, 500, 300);
+			Stage stage2 = new Stage();
+			stage2.setTitle("Latest Update");
 			stage2.setScene(scene2);
 			stage2.show();
 		});
@@ -123,15 +157,17 @@ public class Driver extends Application{
 		public void handle(ActionEvent arg0) {
 			Label label = new Label(textField.getText());
 			Button followButton = new Button("Follow User");
+			lastUpdateTime = System.currentTimeMillis();
+			Label timeLabel = new Label("Created at " + lastUpdateTime + " ms.");
 			ListView<String> followerView = new ListView<>();
 			TextField tweetField = new TextField();
 			Button postButton = new Button("Post Tweet");
 			ListView<String> tweetView = new ListView<>();
 			postButton.setOnAction(event -> {
 				String tweet = tweetField.getText();
-				tweetView.getItems().addAll(tweet);
+				tweetView.getItems().addAll(tweet + "\nPosted at " + System.currentTimeMillis() + " ms.");
 			});
-			HBox h1 = new HBox(20, label, followButton);
+			HBox h1 = new HBox(20, label, followButton, timeLabel);
 			HBox h2 = new HBox(20, tweetField, postButton);
 			VBox v1 = new VBox(h1, followerView, h2, tweetView);
 			v1.setAlignment(Pos.CENTER);
